@@ -1,4 +1,5 @@
-# -deepseek-bilibili-
+# bilibili favorites organize by deepseek
+
 这是一款可以用于国内视频平台Bilibili收藏夹整理的油猴插件，经原作者b站up主某不知名的根号三授权进行二次修改及分发
 原视频链接:  ( https://www.bilibili.com/video/BV1LifmBgEPZ/)
 原项目链接:   https://www.kamiwzw.site/posts/bilibili-favorites-ai-organizer-userscript/
