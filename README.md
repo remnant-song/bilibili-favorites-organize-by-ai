@@ -1,6 +1,6 @@
 
 <div align="center"><img src="assets/icon/icon_full_2.png" width="360" /></div>
-
+<br/>
 Chrome / Edge 扩展，使用 DeepSeek AI 自动分类整理 B 站收藏夹视频。
 
 ## 功能
