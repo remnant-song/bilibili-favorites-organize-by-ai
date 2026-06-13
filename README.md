@@ -1,4 +1,4 @@
-# bilibili favorites organize by deepseek
+# bilibili favorites organize by ai
 
 这是一款可以用于国内视频平台Bilibili收藏夹整理的油猴插件，经原作者b站up主某不知名的根号三授权进行二次修改及分发
 原视频链接:  ( https://www.bilibili.com/video/BV1LifmBgEPZ/)
@@ -7,7 +7,7 @@
 
 ### 贡献者
 - **某不知名的根号三** — 初版作者，完成核心架构与移动模式
-- **CalculusWJF** — 二次分发，DeepSeek V4 Flash 适配、分批处理、智能重试
+- **CalculusWJF** — 二次分发，DeepSeek V4 Flash 适配、分批处理、智能重试https://github.com/CalculusWJF/bilibili-favorites-organize-by-deepseek
 - **remnant-song** — 新增复制模式，实现多收藏夹归属特性
 
 该项目使用DeepSeek V4进行二次修改以使其可被用于DeepSeek V4 Flash版API，经原作者授权使用MIT证书二次分发
