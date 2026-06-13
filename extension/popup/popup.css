@@ -1,0 +1,201 @@
+/* popup.css - 弹窗样式 */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  background: #f5f5f5;
+  min-width: 360px;
+}
+
+.container {
+  padding: 0;
+}
+
+/* 标题栏 */
+.header {
+  background: linear-gradient(135deg, #fb7299 0%, #ff9dbb 100%);
+  color: white;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 区块 */
+.section {
+  background: white;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+}
+
+.section h3 {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+/* 表单元素 */
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="number"],
+.form-group select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #fb7299;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-row .half {
+  flex: 1;
+}
+
+/* 按钮 */
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #fb7299 0%, #ff9dbb 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #fa6186 0%, #fb8aab 100%);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  padding: 6px 12px;
+  background: #f0f0f0;
+  color: #666;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #e8e8e8;
+}
+
+/* 保存状态 */
+.save-status {
+  font-size: 12px;
+  margin-left: 10px;
+  color: #4CAF50;
+}
+
+/* 模式选择 */
+.mode-options {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 8px;
+}
+
+.mode-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.mode-option input[type="radio"] {
+  margin-right: 6px;
+  accent-color: #fb7299;
+}
+
+.mode-label {
+  font-size: 13px;
+}
+
+.mode-desc {
+  font-size: 11px;
+  color: #999;
+  background: #f9f9f9;
+  padding: 8px;
+  border-radius: 4px;
+  line-height: 1.5;
+}
+
+/* 文本域 */
+textarea {
+  width: 100%;
+  height: 80px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 12px;
+  resize: none;
+  outline: none;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+textarea:focus {
+  border-color: #fb7299;
+}
+
+/* 操作区域 */
+.actions {
+  padding: 12px 16px;
+}
+
+/* 帮助区块 */
+.help {
+  background: #fffef5;
+}
+
+.help ol {
+  padding-left: 20px;
+  font-size: 12px;
+  color: #666;
+  line-height: 1.8;
+}
+
+.help .warning {
+  color: #ff6b6b;
+  font-size: 12px;
+  margin-top: 8px;
+}
