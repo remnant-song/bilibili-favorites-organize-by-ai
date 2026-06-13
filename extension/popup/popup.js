@@ -6,7 +6,7 @@
 // ================= DOM 元素引用 =================
 const apiKeyInput = document.getElementById('apiKey');
 const apiUrlInput = document.getElementById('apiUrl');
-const modelSelect = document.getElementById('model');
+const modelInput = document.getElementById('model');
 const batchSizeInput = document.getElementById('batchSize');
 const maxRetriesInput = document.getElementById('maxRetries');
 const customPromptInput = document.getElementById('customPrompt');
@@ -24,7 +24,7 @@ function loadConfig() {
     if (config) {
       apiKeyInput.value = config.apiKey || '';
       apiUrlInput.value = config.apiUrl || 'https://api.deepseek.com/v1/chat/completions';
-      modelSelect.value = config.model || 'deepseek-chat';
+      modelInput.value = config.model || 'deepseek-v4-flash';
       batchSizeInput.value = config.batchSize || 200;
       maxRetriesInput.value = config.maxRetries || 3;
     }
@@ -39,7 +39,7 @@ function saveConfig() {
   const config = {
     apiKey: apiKeyInput.value.trim(),
     apiUrl: apiUrlInput.value.trim(),
-    model: modelSelect.value,
+    model: modelInput.value.trim(),
     batchSize: parseInt(batchSizeInput.value) || 200,
     maxRetries: parseInt(maxRetriesInput.value) || 3
   };

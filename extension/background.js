@@ -7,7 +7,7 @@
 // ================= DeepSeek API 配置 =================
 // 注意：API Key 应存储在 storage 中，这里仅为默认值
 const DEFAULT_API_URL = 'https://api.deepseek.com/v1/chat/completions';
-const DEFAULT_MODEL = 'deepseek-chat';
+const DEFAULT_MODEL = 'deepseek-v4-flash';
 const DEFAULT_BATCH_SIZE = 200;
 const DEFAULT_MAX_RETRIES = 3;
 // ==========================================
