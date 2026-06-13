@@ -10,12 +10,13 @@
   <div class="container">
     <!-- 标题栏 -->
     <div class="header">
-      <span>🤖 AI 收藏夹整理</span>
+      <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/><line x1="9" y1="20" x2="15" y2="20"/></svg>
+      <span>AI 收藏夹整理</span>
     </div>
 
     <!-- 配置区域 -->
     <div class="section">
-      <h3>⚙️ API 配置</h3>
+      <h3><svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> API 配置</h3>
       <div class="form-group">
         <label for="apiKey">DeepSeek API Key</label>
         <input type="password" id="apiKey" placeholder="sk-..." autocomplete="off">
@@ -37,23 +38,40 @@
 
     <!-- 模式选择 -->
     <div class="section">
-      <h3>📋 整理模式</h3>
-      <div class="mode-options">
-        <label class="mode-option">
+      <h3><svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> 整理模式</h3>
+      <div class="mode-cards">
+        <label class="mode-card active" data-mode="move">
           <input type="radio" name="mode" value="move" checked>
-          <span class="mode-label">🚚 移动模式</span>
+          <div class="mode-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+          </div>
+          <div class="mode-card-body">
+            <span class="mode-card-title">移动模式</span>
+            <span class="mode-card-desc">移入目标分类，每个视频只归入一个收藏夹</span>
+          </div>
+          <div class="mode-card-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
         </label>
-        <label class="mode-option">
+        <label class="mode-card" data-mode="copy">
           <input type="radio" name="mode" value="copy">
-          <span class="mode-label">📋 复制模式</span>
+          <div class="mode-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </div>
+          <div class="mode-card-body">
+            <span class="mode-card-title">复制模式</span>
+            <span class="mode-card-desc">复制到匹配分类，视频可归属多个收藏夹</span>
+          </div>
+          <div class="mode-card-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
         </label>
       </div>
-      <p id="modeDesc" class="mode-desc">移动模式：视频从当前收藏夹移入目标分类，每个视频只归入一个收藏夹</p>
     </div>
 
     <!-- 高级设置 -->
     <div class="section">
-      <h3>🔧 高级设置</h3>
+      <h3><svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg> 高级设置</h3>
       <div class="form-row">
         <div class="form-group half">
           <label for="batchSize">每批处理数量</label>
@@ -68,7 +86,7 @@
 
     <!-- 特殊要求 -->
     <div class="section">
-      <h3>⭐ 特殊要求（选填）</h3>
+      <h3><svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> 特殊要求（选填）</h3>
       <textarea id="customPrompt" placeholder="例如：
 - 把所有 Vue 相关的放一个文件夹
 - 把时长超过1小时的单独拎出来
@@ -77,12 +95,12 @@
 
     <!-- 操作按钮 -->
     <div class="actions">
-      <button id="startBtn" class="btn-primary">🚀 开始深度整理</button>
+      <button id="startBtn" class="btn-primary"><svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> 开始深度整理</button>
     </div>
 
     <!-- 使用说明 -->
     <div class="section help">
-      <h3>📖 使用说明</h3>
+      <h3><svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 使用说明</h3>
       <ol>
         <li>首先在「API 配置」中填入有效的 DeepSeek API Key</li>
         <li>确保你已经登录 B 站并进入某个收藏夹页面</li>
@@ -90,7 +108,7 @@
         <li>点击「开始深度整理」按钮</li>
         <li>整理过程中请勿关闭页面</li>
       </ol>
-      <p class="warning">⚠️ 首次使用请先保存配置！</p>
+      <p class="warning"><svg class="inline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 首次使用请先保存配置！</p>
     </div>
   </div>
 

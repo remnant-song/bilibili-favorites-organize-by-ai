@@ -51,7 +51,7 @@ async function getMyFolders(biliData) {
 
 // ================= 新建收藏夹 =================
 async function createFolder(title, biliData) {
-  logStatus(`📁 正在新建收藏夹：【${title}】`);
+  logStatus(`正在新建收藏夹：【${title}】`);
   const url = 'https://api.bilibili.com/x/v3/fav/folder/add';
   const data = buildFormData({ title: title, privacy: 1, csrf: biliData.csrf });
   const res = await fetch(url, {
@@ -82,7 +82,7 @@ async function moveVideos(sourceMediaId, tarMediaId, resourcesStr, biliData) {
   }).then(r => r.json());
   if (res.code !== 0) {
     const msg = `移动失败：${res.message} (${resourcesStr.substring(0, 30)}...)`;
-    logStatus(`⚠️ ${msg}`);
+    logStatus(`[警告] ${msg}`);
     console.error(msg);
   }
 }
@@ -108,7 +108,7 @@ async function copyVideos(sourceMediaId, tarMediaId, resourcesStr, biliData) {
   }).then(r => r.json());
   if (res.code !== 0) {
     const msg = `复制失败：${res.message} (${resourcesStr.substring(0, 30)}...)`;
-    logStatus(`⚠️ ${msg}`);
+    logStatus(`[警告] ${msg}`);
     console.error(msg);
   }
 }
@@ -146,7 +146,7 @@ function getBatchConfig() {
 
 // ================= 重置按钮状态 =================
 function resetButton(btn) {
-  btn.innerText = '🚀 开始深度整理';
+  btn.innerText = '开始深度整理';
   btn.style.background = '#fb7299';
   btn.disabled = false;
   btn.onclick = startProcess;
@@ -161,7 +161,7 @@ let isRunning = false;
  */
 async function startProcess(config) {
   if (isRunning) {
-    logStatus('⏳ 已有整理任务正在进行中，请勿重复点击');
+    logStatus('已有整理任务正在进行中，请勿重复点击');
     return;
   }
 
@@ -191,7 +191,7 @@ async function startProcess(config) {
   }
 
   const { customPrompt, isCopyMode } = config || {};
-  logStatus(`当前模式：${isCopyMode ? '📋 复制模式（视频可归属多个收藏夹）' : '🚚 移动模式（每个视频只归入一个收藏夹）'}`);
+  logStatus(`当前模式：${isCopyMode ? '复制模式（视频可归属多个收藏夹）' : '移动模式（每个视频只归入一个收藏夹）'}`);
 
   // 获取批处理配置
   const batchConfig = await getBatchConfig();
@@ -199,7 +199,7 @@ async function startProcess(config) {
   const MAX_RETRIES = batchConfig.maxRetries;
 
   // 更新按钮状态
-  btn.innerText = '🔄 整理中，请看下方日志...';
+  btn.innerText = '整理中，请看下方日志...';
   btn.disabled = true;
   btn.style.background = '#ccc';
 
@@ -212,7 +212,7 @@ async function startProcess(config) {
     logStatus('正在获取现有的收藏夹列表...');
     const existingFoldersMap = await getMyFolders(biliData);
     const existingFolderNames = Object.keys(existingFoldersMap);
-    logStatus(`📦 发现 ${existingFolderNames.length} 个已有收藏夹`);
+    logStatus(`发现 ${existingFolderNames.length} 个已有收藏夹`);
 
     // 2. 全量抓取视频（增加间隔防风控）
     logStatus('开始全量抓取当前收藏夹视频...');
@@ -225,7 +225,7 @@ async function startProcess(config) {
       const listUrl = `https://api.bilibili.com/x/v3/fav/resource/list?media_id=${sourceMediaId}&pn=${pn}&ps=${ps}&platform=web`;
       const listRes = await fetch(listUrl, { credentials: 'include' }).then(r => r.json());
       if (listRes.code !== 0) {
-        logStatus(`❌ 读取出错: ${listRes.message}`);
+        logStatus(`[错误] 读取出错: ${listRes.message}`);
         break;
       }
       const videos = (listRes.data && listRes.data.medias) ? listRes.data.medias : [];
@@ -237,13 +237,13 @@ async function startProcess(config) {
     }
 
     if (allVideos.length === 0) {
-      logStatus('⚠️ 当前收藏夹是空的！');
+      logStatus('当前收藏夹是空的！');
       resetButton(btn);
       isRunning = false;
       return;
     }
 
-    logStatus(`✅ 读取完毕！共获取到 ${allVideos.length} 个视频。`);
+    logStatus(`读取完毕！共获取到 ${allVideos.length} 个视频。`);
 
     // 3. 分批处理
     const totalBatches = Math.ceil(allVideos.length / BATCH_SIZE);
@@ -255,7 +255,7 @@ async function startProcess(config) {
       const batchVideos = allVideos.slice(start, end);
       const batchNum = i + 1;
 
-      logStatus(`\n📦 开始处理第 ${batchNum}/${totalBatches} 批 (${start + 1}~${end}，共 ${batchVideos.length} 个视频)`);
+      logStatus(`\n开始处理第 ${batchNum}/${totalBatches} 批 (${start + 1}~${end}，共 ${batchVideos.length} 个视频)`);
 
       // 构造发送给 AI 的视频数据
       const videoDataForAI = batchVideos.map(v => ({
@@ -312,10 +312,10 @@ ${JSON.stringify(videoDataForAI)}`;
         } catch (err) {
           console.error(`第${batchNum}批 AI 调用失败 (尝试 ${attempt}/${MAX_RETRIES}):`, err.message);
           if (attempt < MAX_RETRIES) {
-            logStatus(`⏳ 第 ${batchNum} 批 AI 调用失败，${2 * attempt}秒后重试...`);
+            logStatus(`第 ${batchNum} 批 AI 调用失败，${2 * attempt}秒后重试...`);
             await sleep(2000 * attempt);
           } else {
-            logStatus(`❌ 第 ${batchNum} 批 AI 调用多次失败，终止后续批次。`);
+            logStatus(`[错误] 第 ${batchNum} 批 AI 调用多次失败，终止后续批次。`);
           }
         }
       }
@@ -331,11 +331,11 @@ ${JSON.stringify(videoDataForAI)}`;
         console.log(`========== 第${batchNum}批 AI 返回原始内容 ==========`);
         console.log(content);
         console.log(`====================================================`);
-        logStatus(`📄 已输出第${batchNum}批 AI 原始内容至控制台`);
+        logStatus(`已输出第${batchNum}批 AI 原始内容至控制台`);
 
         const aiResult = JSON.parse(content);
         console.log(`💡 第${batchNum}批 AI 思考过程：`, aiResult.thoughts);
-        logStatus(`💡 第${batchNum}批思考完毕！`);
+        logStatus(`第${batchNum}批思考完毕！`);
 
         // 执行移动/复制操作
         let batchProcessed = 0;
@@ -350,8 +350,7 @@ ${JSON.stringify(videoDataForAI)}`;
           }
 
           const actionText = isCopyMode ? '复制到' : '移入';
-          const actionEmoji = isCopyMode ? '📋' : '🚚';
-          logStatus(`${actionEmoji} 正将 ${vids.length} 个视频${actionText}【${categoryName}】...`);
+          logStatus(`正将 ${vids.length} 个视频${actionText}【${categoryName}】...`);
           const resourcesStr = vids.map(v => `${v.id}:${v.type}`).join(',');
 
           if (isCopyMode) {
@@ -365,33 +364,33 @@ ${JSON.stringify(videoDataForAI)}`;
         }
 
         totalProcessed += batchProcessed;
-        logStatus(`✅ 第 ${batchNum} 批处理完成，本批处理 ${batchProcessed} 个视频`);
+        logStatus(`第 ${batchNum} 批处理完成，本批处理 ${batchProcessed} 个视频`);
 
       } catch (e) {
-        logStatus(`❌ 第 ${batchNum} 批 AI 返回的 JSON 格式错误: ${e.message}，跳过本批继续下一批。`);
+        logStatus(`[错误] 第 ${batchNum} 批 AI 返回的 JSON 格式错误: ${e.message}，跳过本批继续下一批。`);
         console.error('解析失败的 AI 内容:', aiText);
         continue;
       }
 
       // 批次间隔
       if (i < totalBatches - 1) {
-        logStatus(`⏳ 等待 2 秒后开始下一批...`);
+        logStatus(`等待 2 秒后开始下一批...`);
         await sleep(2000);
       }
     }
 
     // 完成提示
     const modeFinishText = isCopyMode
-      ? `\n🎉 全部整理完成！共执行了 ${totalProcessed} 次复制操作（视频仍保留在当前收藏夹中）。请刷新页面！`
-      : `\n🎉 全部整理完成！共处理了 ${totalProcessed} 个视频。请刷新页面！`;
+      ? `\n全部整理完成！共执行了 ${totalProcessed} 次复制操作（视频仍保留在当前收藏夹中）。请刷新页面！`
+      : `\n全部整理完成！共处理了 ${totalProcessed} 个视频。请刷新页面！`;
     logStatus(modeFinishText);
-    btn.innerText = '✅ 整理完成，点我重置';
+    btn.innerText = '整理完成，点我重置';
     btn.style.background = '#4CAF50';
     btn.disabled = false;
     btn.onclick = () => window.location.reload();
 
   } catch (error) {
-    logStatus(`❌ 发生未知错误，请看 F12 控制台`);
+    logStatus(`[错误] 发生未知错误，请看 F12 控制台`);
     console.error(error);
     resetButton(btn);
   } finally {
@@ -428,31 +427,28 @@ function initUI() {
 
   panel.innerHTML = `
     <div style="background: linear-gradient(135deg, #fb7299 0%, #ff9dbb 100%); color: #fff; padding: 12px 15px; font-weight: bold; font-size: 15px; display: flex; justify-content: space-between; align-items: center;">
-      <span>🤖 AI 收藏夹整理助理</span>
-      <span id="ai-close-btn" style="cursor: pointer; font-size: 20px; line-height: 1;">×</span>
+      <span style="display:flex;align-items:center;gap:6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/><line x1="9" y1="20" x2="15" y2="20"/></svg> AI 收藏夹整理助理</span>
+      <span id="ai-close-btn" style="cursor: pointer; font-size: 20px; line-height: 1;">&times;</span>
     </div>
     <div style="padding: 15px; border: 1px solid #eee; border-top: none;">
       <p style="margin: 0 0 8px 0; font-size: 13px; color: #555;">整理模式：</p>
       <div style="margin-bottom: 6px; font-size: 13px; display: flex; gap: 15px;">
         <label style="cursor: pointer; display: flex; align-items: center; gap: 4px;">
-          <input type="radio" name="ai-mode" value="move" checked> 🚚 移动模式
+          <input type="radio" name="ai-mode" value="move" checked> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg> 移动模式
         </label>
         <label style="cursor: pointer; display: flex; align-items: center; gap: 4px;">
-          <input type="radio" name="ai-mode" value="copy"> 📋 复制模式
+          <input type="radio" name="ai-mode" value="copy"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> 复制模式
         </label>
       </div>
       <div id="ai-mode-desc" style="margin-bottom: 12px; font-size: 11px; color: #999; padding: 6px; background: #f9f9f9; border-radius: 4px; line-height: 1.5;">
         移动模式：视频从当前收藏夹移入目标分类，每个视频只归入一个收藏夹
       </div>
       <p style="margin: 0 0 8px 0; font-size: 13px; color: #555;">有什么特定的整理要求吗？(选填)</p>
-      <textarea id="ai-custom-prompt" placeholder="例如：
-- 把所有 Vue 相关的放一个文件夹
-- 把时长超过1小时的单独拎出来
-(不填则优先放入已有收藏夹，并由 AI 自由发挥补充分类)" style="width: 100%; height: 80px; padding: 8px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; resize: none; margin-bottom: 12px; outline: none;"></textarea>
-      <button id="ai-start-btn" style="width: 100%; padding: 10px; background: #fb7299; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; transition: background 0.2s;">🚀 开始深度整理</button>
+      <textarea id="ai-custom-prompt" placeholder="例如：\n- 把所有 Vue 相关的放一个文件夹\n- 把时长超过1小时的单独拎出来\n(不填则优先放入已有收藏夹，并由 AI 自由发挥补充分类)" style="width: 100%; height: 80px; padding: 8px; box-sizing: border-box; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; resize: none; margin-bottom: 12px; outline: none;"></textarea>
+      <button id="ai-start-btn" style="width: 100%; padding: 10px; background: #fb7299; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> 开始深度整理</button>
       <div id="ai-status-log" style="margin-top: 15px; background: #f4f4f4; padding: 8px; border-radius: 6px; font-size: 12px; color: #333; height: 180px; overflow-y: auto; word-break: break-all;">
         等待指令...<br>
-        💡 提示：请先在插件弹窗中配置 API Key 并保存，然后再点击「开始深度整理」
+        提示：请先在插件弹窗中配置 API Key 并保存，然后再点击「开始深度整理」
       </div>
     </div>
   `;
@@ -488,7 +484,7 @@ function initUI() {
     });
   });
 
-  logStatus('✅ AI 整理面板已初始化');
+  logStatus('AI 整理面板已初始化');
 }
 
 // ================= 消息监听（接收来自 popup 的指令） =================
@@ -539,10 +535,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // ================= 初始化 =================
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initUI);
-} else {
-  initUI();
-}
-
+// 不自动初始化 UI，仅在收到 popup 消息时才创建面板
 console.log('B站 AI 收藏夹整理 - Content Script 已加载');

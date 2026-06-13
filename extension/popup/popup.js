@@ -14,7 +14,6 @@ const saveConfigBtn = document.getElementById('saveConfigBtn');
 const saveStatus = document.getElementById('saveStatus');
 const startBtn = document.getElementById('startBtn');
 const modeRadios = document.querySelectorAll('input[name="mode"]');
-const modeDesc = document.getElementById('modeDesc');
 
 // ================= 配置加载 =================
 /**
@@ -47,14 +46,14 @@ function saveConfig() {
 
   // 验证必填项
   if (!config.apiKey) {
-    saveStatus.textContent = '❌ 请填写 API Key';
+    saveStatus.textContent = '请填写 API Key';
     saveStatus.style.color = '#ff6b6b';
     return;
   }
 
   chrome.runtime.sendMessage({ action: 'saveConfig', config }, (response) => {
     if (response && response.success) {
-      saveStatus.textContent = '✅ 已保存';
+      saveStatus.textContent = '已保存';
       saveStatus.style.color = '#4CAF50';
       setTimeout(() => {
         saveStatus.textContent = '';
@@ -129,14 +128,12 @@ startBtn.addEventListener('click', () => {
   setTimeout(startOrganize, 100);
 });
 
-// 模式切换时更新说明文字
+// 模式切换时更新卡片 active 状态
 modeRadios.forEach(radio => {
   radio.addEventListener('change', function() {
-    if (this.value === 'copy') {
-      modeDesc.textContent = '复制模式：视频被复制到所有匹配的分类收藏夹，仍保留在当前收藏夹，一个视频可归入多个收藏夹';
-    } else {
-      modeDesc.textContent = '移动模式：视频从当前收藏夹移入目标分类，每个视频只归入一个收藏夹';
-    }
+    document.querySelectorAll('.mode-card').forEach(card => {
+      card.classList.toggle('active', card.dataset.mode === this.value);
+    });
   });
 });
 
