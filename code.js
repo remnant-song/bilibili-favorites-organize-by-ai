@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         B站 AI 收藏夹自动细化整理 (V8.3 智能重试版)
+// @name         B站 AI 收藏夹自动细化整理
 // @namespace    http://tampermonkey.net/
-// @version      8.3.0
-// @description  使用 DeepSeek 模型，分批处理，网络问题自动重试，JSON格式错误跳过不中断
-// @author       某不知名的根号三 & Gemini
+// @version      8.4.0
+// @description  使用 DeepSeek 模型，分批处理，网络问题自动重试，JSON格式错误跳过不中断，支持复制模式实现多收藏夹归属
+// @author       某不知名的根号三(初版) | CalculusWJF(二次分发-DeepSeek适配) | remnant-song
 // @match        https://space.bilibili.com/*
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
@@ -87,6 +87,26 @@
         }
     }
 
+    // 复制视频到目标收藏夹（B站支持一个视频归属多个收藏夹）
+    // 与 moveVideos 不同，copy 后视频仍保留在源收藏夹中，实现多收藏夹归属
+    // API: https://api.bilibili.com/x/v3/fav/resource/copy
+    async function copyVideos(sourceMediaId, tarMediaId, resourcesStr, biliData) {
+        const url = 'https://api.bilibili.com/x/v3/fav/resource/copy';
+        const data = buildFormData({
+            src_media_id: sourceMediaId, tar_media_id: tarMediaId, mid: biliData.mid,
+            resources: resourcesStr, platform: 'web', csrf: biliData.csrf
+        });
+        const res = await fetch(url, {
+            method: 'POST', credentials: 'include',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: data
+        }).then(r => r.json());
+        if (res.code !== 0) {
+            const msg = `复制失败：${res.message} (${resourcesStr.substring(0, 30)}...)`;
+            logStatus(`⚠️ ${msg}`);
+            console.error(msg);
+        }
+    }
+
     // ========== 核心分批处理逻辑 ==========
     let isRunning = false;
 
@@ -114,6 +134,10 @@
         }
 
         const userRequirement = customPromptInput.value.trim();
+        // 读取用户选择的整理模式：move=移动模式（默认），copy=复制模式（支持多收藏夹归属）
+        const modeRadio = document.querySelector('input[name="ai-mode"]:checked');
+        const isCopyMode = modeRadio ? modeRadio.value === 'copy' : false;
+        logStatus(`当前模式：${isCopyMode ? '📋 复制模式（视频可归属多个收藏夹）' : '🚚 移动模式（每个视频只归入一个收藏夹）'}`);
         btn.innerText = '🔄 整理中，请看下方日志...';
         btn.disabled = true;
         btn.style.background = '#ccc';
@@ -175,7 +199,12 @@
                 }));
 
                 const customRuleText = userRequirement
-                    ? `\n\n【⭐⭐⭐用户特殊需求 (最高优先级)⭐⭐⭐】\n用户的特别指示是："${userRequirement}"\n请你务必听从！\n⚠️ 致命警告：如果用户的指示中提到了要把视频放入某个分类，请你务必在上面的【已有收藏夹】列表里寻找最匹配的准确名称！如果用户打字简写了（比如用户说“音乐”，但已有的是“我的音乐”），你必须输出已有收藏夹的完整名称“我的音乐”，绝不允许凭空新建近义词分类！`
+                    ? `\n\n【⭐⭐⭐用户特殊需求 (最高优先级)⭐⭐⭐】\n用户的特别指示是："${userRequirement}"\n请你务必听从！\n⚠️ 致命警告：如果用户的指示中提到了要把视频放入某个分类，请你务必在上面的【已有收藏夹】列表里寻找最匹配的准确名称！如果用户打字简写了（比如用户说"音乐"，但已有的是"我的音乐"），你必须输出已有收藏夹的完整名称"我的音乐"，绝不允许凭空新建近义词分类！`
+                    : '';
+
+                // 复制模式下，允许一个视频同时归属多个分类收藏夹
+                const modeRuleText = isCopyMode
+                    ? `\n\n【步骤 4：多分类归属（复制模式专属）】\n当前为复制模式，一个视频如果同时符合多个分类，你应当在多个分类中都放入该视频的 id 和 type。\n例如一个"Vue前端教程"视频，如果同时存在"前端"和"Vue"两个分类，则该视频应同时出现在这两个分类的列表中。\n请不要吝啬，合理地让视频出现在所有沾边的分类中。这是复制模式的核心优势！`
                     : '';
 
                 const combinedPrompt = `你是一个逻辑极其严密的文件整理专家。我现在需要你帮我把一批 B 站视频分类。
@@ -190,7 +219,7 @@
 只有当某几个视频确实与所有“已有收藏夹”都毫不相干时，你才可以创建一个新的涵盖面广的“大类”。绝不为单一视频建新分类，孤立视频请塞入最贴近的已有分类。
 
 【步骤 3：绝无遗漏】
-确保列表中的**每一个视频**都被分配到了具体的分类中，绝对不可以遗漏任何一个 ID！${customRuleText}
+确保列表中的**每一个视频**都被分配到了具体的分类中，绝对不可以遗漏任何一个 ID！${customRuleText}${modeRuleText}
 
 请严格输出合法的纯 JSON 格式数据。包含 "thoughts" 和 "categories" 两个字段。
 示例：
@@ -251,9 +280,18 @@ ${JSON.stringify(videoDataForAI)}`;
                             await sleep(1000);
                         }
 
-                        logStatus(`🚚 正将 ${vids.length} 个视频移入【${categoryName}】...`);
+                        // 根据模式选择移动或复制操作
+                        const actionText = isCopyMode ? '复制到' : '移入';
+                        const actionEmoji = isCopyMode ? '📋' : '🚚';
+                        logStatus(`${actionEmoji} 正将 ${vids.length} 个视频${actionText}【${categoryName}】...`);
                         const resourcesStr = vids.map(v => `${v.id}:${v.type}`).join(',');
-                        await moveVideos(sourceMediaId, targetFolderId, resourcesStr, biliData);
+                        if (isCopyMode) {
+                            // 复制模式：视频复制到目标收藏夹，仍保留在源收藏夹
+                            await copyVideos(sourceMediaId, targetFolderId, resourcesStr, biliData);
+                        } else {
+                            // 移动模式：视频从源收藏夹移入目标收藏夹
+                            await moveVideos(sourceMediaId, targetFolderId, resourcesStr, biliData);
+                        }
                         batchProcessed += vids.length;
                         await sleep(600);
                     }
@@ -275,7 +313,11 @@ ${JSON.stringify(videoDataForAI)}`;
                 }
             }
 
-            logStatus(`\n🎉 全部整理完成！共处理了 ${totalProcessed} 个视频。请刷新页面！`);
+            // 根据模式显示不同的完成提示
+            const modeFinishText = isCopyMode
+                ? `\n🎉 全部整理完成！共执行了 ${totalProcessed} 次复制操作（视频仍保留在当前收藏夹中）。请刷新页面！`
+                : `\n🎉 全部整理完成！共处理了 ${totalProcessed} 个视频。请刷新页面！`;
+            logStatus(modeFinishText);
             btn.innerText = '✅ 整理完成，点我重置';
             btn.style.background = '#4CAF50';
             btn.disabled = false;
@@ -362,6 +404,19 @@ ${JSON.stringify(videoDataForAI)}`;
                 <span id="ai-close-btn" style="cursor:pointer; font-size:18px; line-height:1;">×</span>
             </div>
             <div style="background:#fff; padding:15px; border:1px solid #eee; border-top:none;">
+                <!-- 整理模式选择器 -->
+                <p style="margin:0 0 8px 0; font-size:13px; color:#555;">整理模式：</p>
+                <div style="margin-bottom:6px; font-size:13px; display:flex; gap:15px;">
+                    <label style="cursor:pointer; display:flex; align-items:center; gap:4px;">
+                        <input type="radio" name="ai-mode" value="move" checked> 🚚 移动模式
+                    </label>
+                    <label style="cursor:pointer; display:flex; align-items:center; gap:4px;">
+                        <input type="radio" name="ai-mode" value="copy"> 📋 复制模式
+                    </label>
+                </div>
+                <div id="ai-mode-desc" style="margin-bottom:12px; font-size:11px; color:#999; padding:6px; background:#f9f9f9; border-radius:4px; line-height:1.5;">
+                    移动模式：视频从当前收藏夹移入目标分类，每个视频只归入一个收藏夹
+                </div>
                 <p style="margin:0 0 8px 0; font-size:13px; color:#555;">有什么特定的整理要求吗？(选填)</p>
                 <textarea id="ai-custom-prompt" placeholder="例如：\n- 把所有 Vue 相关的放一个文件夹\n- 把时长超过1小时的单独拎出来\n(不填则优先放入已有收藏夹，并由 AI 自由发挥补充分类)" style="width:100%; height:80px; padding:8px; box-sizing:border-box; border:1px solid #ddd; border-radius:6px; font-size:13px; resize:none; margin-bottom:12px; outline:none;"></textarea>
                 <button id="ai-start-btn" style="width:100%; padding:10px; background:#fb7299; color:white; border:none; border-radius:6px; font-size:14px; font-weight:bold; cursor:pointer; transition:background 0.2s;">🚀 开始深度整理</button>
@@ -385,6 +440,18 @@ ${JSON.stringify(videoDataForAI)}`;
         };
 
         document.getElementById('ai-start-btn').onclick = startProcess;
+
+        // 模式切换时动态更新说明文字，帮助用户理解当前模式的行为
+        document.querySelectorAll('input[name="ai-mode"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const desc = document.getElementById('ai-mode-desc');
+                if (this.value === 'copy') {
+                    desc.textContent = '复制模式：视频被复制到所有匹配的分类收藏夹，仍保留在当前收藏夹，一个视频可归入多个收藏夹';
+                } else {
+                    desc.textContent = '移动模式：视频从当前收藏夹移入目标分类，每个视频只归入一个收藏夹';
+                }
+            });
+        });
     }
 
     if (document.readyState === 'loading') {
