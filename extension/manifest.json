@@ -1,7 +1,8 @@
 {
   "manifest_version": 3,
   "name": "B站AI收藏夹整理",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "default_locale": "zh",
   "description": "使用 DeepSeek 模型，自动整理 B 站收藏夹视频分类",
   "author": "某不知名的根号三 | CalculusWJF | remnant-song",
   "permissions": [

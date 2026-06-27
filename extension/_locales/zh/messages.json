@@ -1,0 +1,182 @@
+{
+  "extName": {
+    "message": "B站AI收藏夹整理",
+    "description": "扩展名称"
+  },
+  "extDescription": {
+    "message": "使用 DeepSeek 模型，自动整理 B 站收藏夹视频分类",
+    "description": "扩展描述"
+  },
+  "extAuthor": {
+    "message": "某不知名的根号三 | CalculusWJF | remnant-song",
+    "description": "作者信息"
+  },
+  "apiConfigTitle": {
+    "message": "API 配置",
+    "description": "API 配置区域标题"
+  },
+  "apiKeyLabel": {
+    "message": "API Key",
+    "description": "API Key 输入框标签"
+  },
+  "apiUrlLabel": {
+    "message": "API 地址",
+    "description": "API 地址输入框标签"
+  },
+  "modelLabel": {
+    "message": "模型",
+    "description": "模型名称输入框标签"
+  },
+  "saveConfigBtn": {
+    "message": "保存配置",
+    "description": "保存配置按钮文本"
+  },
+  "organizeModeTitle": {
+    "message": "整理模式",
+    "description": "整理模式区域标题"
+  },
+  "moveModeTitle": {
+    "message": "移动模式",
+    "description": "移动模式卡片标题"
+  },
+  "moveModeDesc": {
+    "message": "移入目标分类，每个视频只归入一个收藏夹",
+    "description": "移动模式描述"
+  },
+  "copyModeTitle": {
+    "message": "复制模式",
+    "description": "复制模式卡片标题"
+  },
+  "copyModeDesc": {
+    "message": "复制到匹配分类，视频可归属多个收藏夹",
+    "description": "复制模式描述"
+  },
+  "advancedSettingsTitle": {
+    "message": "高级设置",
+    "description": "高级设置区域标题"
+  },
+  "batchSizeLabel": {
+    "message": "每批处理数量",
+    "description": "批量大小输入框标签"
+  },
+  "maxRetriesLabel": {
+    "message": "最大重试次数",
+    "description": "最大重试次数输入框标签"
+  },
+  "specialReqTitle": {
+    "message": "特殊要求（选填）",
+    "description": "特殊要求区域标题"
+  },
+  "specialReqPlaceholder": {
+    "message": "例如：\n- 把所有 Vue 相关的放一个文件夹\n- 把时长超过1小时的单独拎出来\n(不填则优先放入已有收藏夹，并由 AI 自由发挥补充分类)",
+    "description": "特殊要求文本框占位提示"
+  },
+  "startBtn": {
+    "message": "开始深度整理",
+    "description": "开始按钮文本"
+  },
+  "helpTitle": {
+    "message": "使用说明",
+    "description": "使用说明区域标题"
+  },
+  "helpStep1": {
+    "message": "首先在「API 配置」中填入有效的 API Key",
+    "description": "使用说明第1步"
+  },
+  "helpStep2": {
+    "message": "确保你已经登录 B 站并进入某个收藏夹页面",
+    "description": "使用说明第2步"
+  },
+  "helpStep3": {
+    "message": "选择整理模式，填写特殊要求（可选）",
+    "description": "使用说明第3步"
+  },
+  "helpStep4": {
+    "message": "点击「开始深度整理」按钮",
+    "description": "使用说明第4步"
+  },
+  "helpStep5": {
+    "message": "整理过程中请勿关闭页面",
+    "description": "使用说明第5步"
+  },
+  "helpWarning": {
+    "message": "首次使用请先保存配置！",
+    "description": "使用说明中的警告提示"
+  },
+  "saveStatusSuccess": {
+    "message": "已保存",
+    "description": "配置保存成功状态文本"
+  },
+  "saveStatusNoKey": {
+    "message": "请填写 API Key",
+    "description": "未填写 API Key 时的提示"
+  },
+  "errNotBilibili": {
+    "message": "请在 B 站收藏夹页面中使用此扩展！",
+    "description": "非B站页面时的错误提示"
+  },
+  "errNotConnected": {
+    "message": "扩展未能连接到页面，请刷新 B 站收藏夹页面后重试！",
+    "description": "页面未连接时的错误提示"
+  },
+  "errStartFailed": {
+    "message": "启动失败，请检查控制台",
+    "description": "启动失败时的错误提示"
+  },
+  "errNoTabInfo": {
+    "message": "无法获取当前页面信息，请确保在 B 站收藏夹页面中点击此扩展",
+    "description": "无法获取标签页信息时的错误提示"
+  },
+  "notLoggedIn": {
+    "message": "请确保你在 B 站已登录！",
+    "description": "未登录时的提示"
+  },
+  "noFavId": {
+    "message": "未能识别当前页面的收藏夹 ID！请确保你在某个具体的收藏夹页面内。",
+    "description": "无法识别收藏夹 ID 时的提示"
+  },
+  "aiAssistantTitle": {
+    "message": "AI 收藏夹整理助理",
+    "description": "AI助理面板标题"
+  },
+  "waitingInstruction": {
+    "message": "等待指令...",
+    "description": "等待指令时的占位文本"
+  },
+  "processingStatus": {
+    "message": "整理中，请看下方日志...",
+    "description": "处理进行中按钮文本"
+  },
+  "completeReload": {
+    "message": "整理完成，点我重置",
+    "description": "完成后按钮文本"
+  },
+  "moveModeShort": {
+    "message": "移动模式",
+    "description": "移动模式简称"
+  },
+  "copyModeShort": {
+    "message": "复制模式",
+    "description": "复制模式简称"
+  },
+  "moveModeDescInline": {
+    "message": "移动模式：视频从当前收藏夹移入目标分类，每个视频只归入一个收藏夹",
+    "description": "页面内联模式说明-移动模式"
+  },
+  "copyModeDescInline": {
+    "message": "复制模式：视频被复制到所有匹配的分类收藏夹，仍保留在当前收藏夹，一个视频可归入多个收藏夹",
+    "description": "页面内联模式说明-复制模式"
+  },
+  "promptPlaceholder": {
+    "message": "例如：\n- 把所有 Vue 相关的放一个文件夹\n- 把时长超过1小时的单独拎出来\n(不填则优先放入已有收藏夹，并由 AI 自由发挥补充分类)",
+    "description": "自定义提示词文本框占位文本"
+  },
+  "tooltipHint": {
+    "message": "提示：请先在插件弹窗中配置 API Key 并保存，然后再点击「开始深度整理」",
+    "description": "初始等待提示文本"
+  },
+  "configUpdated": {
+    "message": "配置已更新",
+    "description": "配置更新时的通知"
+  }
+}
